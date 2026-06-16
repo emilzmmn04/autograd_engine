@@ -1,3 +1,5 @@
+import numpy
+
 # A 2x2 matrix: [[a, b], [c, d]]
 matrix_a = [[1, 2], 
             [3, 4]]
@@ -18,4 +20,13 @@ def multiply_matrices(A, B):
                 result[i][j] += A[i][k] * B[k][j]
     return result
 
-print(multiply_matrices(matrix_a, matrix_b))
+# --- ADD YOUR NEW FUNCTION HERE ---
+def transpose_matrix(A):
+    # This creates a new matrix where rows become columns
+    return [[A[j][i] for j in range(len(A))] for i in range(len(A[0]))]
+
+# Verify it works
+print("Multiplication:", multiply_matrices(matrix_a, matrix_b))
+print("Transpose of A:", transpose_matrix(matrix_a))
+
+
