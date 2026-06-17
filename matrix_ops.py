@@ -1,6 +1,6 @@
 class Value:
     def __init__(self, data, _children=()):
-        self.data( = data
+        self.data = data
         self._prev = set(_children) #trackes nodes that created this value
 
     def __repr__(self):
@@ -10,10 +10,17 @@ class Value:
 	# to write a + b
 	out = Value(self.data + other.data(self, other))
 	return out
-	# to write a * b
+	
     def __mul__(self, other):
+	# to write a*b
 	out = Value(self.data * other.data(self, other))
 	return out
+
+    def __sub__(self, other):
+	# to write a - b 
+	out = Value(self.data - other.data(self, other))
+	return out
+
 
 #testing 
 
