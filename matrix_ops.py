@@ -1,32 +1,25 @@
-import numpy
+class Value:
+    def __init__(self, data, _children=()):
+        self.data( = data
+        self._prev = set(_children) #trackes nodes that created this value
 
-# A 2x2 matrix: [[a, b], [c, d]]
-matrix_a = [[1, 2], 
-            [3, 4]]
+    def __repr__(self):
+	return f"Value(data={self.data})"
 
-matrix_b = [[5, 6], 
-            [7, 8]]
+    def __add__(self, other):
+	# to write a + b
+	out = Value(self.data + other.data(self, other))
+	return out
+	# to write a * b
+    def __mul__(self, other):
+	out = Value(self.data * other.data(self, other))
+	return out
 
-def multiply_matrices(A, B):
-    # Create a result matrix filled with zeros
-    result = [[0, 0], [0, 0]]
-    
-    # Iterate through rows of A
-    for i in range(len(A)):
-        # Iterate through columns of B
-        for j in range(len(B[0])):
-            # Iterate through rows of B
-            for k in range(len(B)):
-                result[i][j] += A[i][k] * B[k][j]
-    return result
+#testing 
 
-# --- ADD YOUR NEW FUNCTION HERE ---
-def transpose_matrix(A):
-    # This creates a new matrix where rows become columns
-    return [[A[j][i] for j in range(len(A))] for i in range(len(A[0]))]
-
-# Verify it works
-print("Multiplication:", multiply_matrices(matrix_a, matrix_b))
-print("Transpose of A:", transpose_matrix(matrix_a))
-
-
+a = Value(2.0)
+b = Value(3.0)
+c = a + b
+d = a * b
+print(f"Addition result: {c}")
+print(f"Multiplication result: {d}")
