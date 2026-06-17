@@ -1,6 +1,7 @@
 class Value:
     def __init__(self, data, _children=()):
         self.data = data
+        self.grad = 0.0      #Gradient
         self._prev = set(_children) #trackes nodes that created this value
 
     def __repr__(self):
