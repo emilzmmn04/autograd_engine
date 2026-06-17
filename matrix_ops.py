@@ -4,22 +4,22 @@ class Value:
         self._prev = set(_children) #trackes nodes that created this value
 
     def __repr__(self):
-	return f"Value(data={self.data})"
+        return f"Value(data={self.data})"
 
     def __add__(self, other):
 	# to write a + b
-	out = Value(self.data + other.data(self, other))
-	return out
+        out = Value(self.data + other.data, (self, other))
+        return out
 	
     def __mul__(self, other):
 	# to write a*b
-	out = Value(self.data * other.data(self, other))
-	return out
+        out = Value(self.data * other.data, (self, other))
+        return out
 
     def __sub__(self, other):
 	# to write a - b 
-	out = Value(self.data - other.data(self, other))
-	return out
+        out = Value(self.data - other.data, (self, other))
+        return out
 
 
 #testing 
