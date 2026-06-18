@@ -9,25 +9,60 @@ class Value:
 
     def __add__(self, other):
 	# to write a + b
-        out = Value(self.data + other.data, (self, other))
+        out = Value(self.data + other.data, (self, other))        
+        def _backward():
+            self.grad += 1.0 * out.grad
+            other.grad += 1.0 * out.grad
+        out._backward =  _backward
         return out
 	
     def __mul__(self, other):
 	# to write a*b
         out = Value(self.data * other.data, (self, other))
+        def _backward():
+            self.grad += other.data * out.grad
+            other.grad += self.data * out.grad
+        out._backward =  _backward
         return out
 
     def __sub__(self, other):
 	# to write a - b 
         out = Value(self.data - other.data, (self, other))
+        def _backward():
+            self.grad += 1.0 * out.grad
+            other.grad += -1.0 * out.grad
+        out._backward =  _backward
         return out
 
+    def backward(self):
+        topo = []
+        visited = set()
+        def build_topo(v):
+             if v not in visited:
+               visited.add(v)
+               for child in v._prev:
+                   build_topo(child)
+               topo.append(v)
 
-#testing 
+        build_topo(self)
 
+        self.grad = 1.0
+
+        for node in reversed(topo):
+            if hasattr(node, '_backward'):
+                 node._backward()
+
+
+# --- Testing ---
 a = Value(2.0)
 b = Value(3.0)
-c = a + b
-d = a * b
-print(f"Addition result: {c}")
-print(f"Multiplication result: {d}")
+c = a + b  # Forward pass
+d = a * b  # Forward pass
+
+# --- THE MISSING STEP ---
+c.backward() 
+d.backward()
+
+# Now print the gradients
+print(f"a.grad: {a.grad}") 
+print(f"b.grad: {b.grad}")
