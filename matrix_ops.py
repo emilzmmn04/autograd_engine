@@ -52,17 +52,46 @@ class Value:
             if hasattr(node, '_backward'):
                  node._backward()
 
+     
+    def relu(self):
+        out = Value(max(0.0, self.data), (self,))
+
+        def _backward():
+
+            self.grad += (1.0 if self.data > 0 else 0.0) * out.grad
+
+        out._backward = _backward
+
+        return out
+
+    def zero_grad(self):
+        self.grad = 0.0
+
+
+
+    def zero_grad(self):
+        self.grad = 0.0
+
+
 
 # --- Testing ---
 a = Value(2.0)
 b = Value(3.0)
-c = a + b  # Forward pass
-d = a * b  # Forward pass
+c = a + b 
+d = a * b 
 
-# --- THE MISSING STEP ---
-c.backward() 
+# 1. Test c.backward()
+c.backward()
+print(f"a.grad after c: {a.grad}") # Expect 1.0
+print(f"b.grad after c: {b.grad}") # Expect 1.0
+
+# 2. RESET before the next pass!
+a.grad = 0.0
+b.grad = 0.0
+c.grad = 0.0
+d.grad = 0.0
+
+# 3. Test d.backward()
 d.backward()
-
-# Now print the gradients
-print(f"a.grad: {a.grad}") 
-print(f"b.grad: {b.grad}")
+print(f"a.grad after d: {a.grad}") # Expect 3.0
+print(f"b.grad after d: {b.grad}") # Expect 2.0
